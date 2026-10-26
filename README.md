@@ -48,7 +48,7 @@
 <div align="center">
 
 <a href="kalyo-launch.html" target="_blank" title="Cliquez pour ouvrir la version interactive plein écran">
-  <img src="docs/kalyo-launch-banner.svg" alt="Kalyo Interactive Launch Showcase" width="100%" />
+  <img src="docs/kalyo-launch-preview.gif" alt="Kalyo Interactive Launch Showcase" width="100%" />
 </a>
 
 <br />
