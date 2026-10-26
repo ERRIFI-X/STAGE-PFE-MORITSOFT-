@@ -165,10 +165,8 @@ graph TD
 ### 1. Cloner le Projet
 
 ```bash
-git clone https://github.com/oukaomar8-max/front_gestion_project.git frontend
-git clone https://github.com/oukaomar8-max/backend_gestionPro.git backend
-# Ou si vous travaillez dans le dossier unifié STAGE PFE :
-cd "STAGE PFE"
+git clone https://github.com/ERRIFI-X/STAGE-PFE-MORITSOFT-.git
+cd STAGE-PFE-MORITSOFT-
 ```
 
 ---
