@@ -1,106 +1,275 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="100%" height="auto" style="border-radius: 16px; background: #020617; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="100%" height="auto">
   <defs>
-    <!-- Background gradients -->
-    <radialGradient id="bgGrad1" cx="20%" cy="10%" r="60%">
-      <stop offset="0%" stop-color="#6366f1" stop-opacity="0.35"/>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap');
+      * { box-sizing: border-box; }
+      text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+      /* Animation for slides (20s cycle = 5 slides x 4s each) */
+      @keyframes slide1 {
+        0%, 18% { opacity: 1; transform: translateY(0); }
+        20%, 98% { opacity: 0; transform: translateY(12px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes slide2 {
+        0%, 19% { opacity: 0; transform: translateY(12px); }
+        22%, 38% { opacity: 1; transform: translateY(0); }
+        40%, 100% { opacity: 0; transform: translateY(12px); }
+      }
+      @keyframes slide3 {
+        0%, 39% { opacity: 0; transform: translateY(12px); }
+        42%, 58% { opacity: 1; transform: translateY(0); }
+        60%, 100% { opacity: 0; transform: translateY(12px); }
+      }
+      @keyframes slide4 {
+        0%, 59% { opacity: 0; transform: translateY(12px); }
+        62%, 78% { opacity: 1; transform: translateY(0); }
+        80%, 100% { opacity: 0; transform: translateY(12px); }
+      }
+      @keyframes slide5 {
+        0%, 79% { opacity: 0; transform: translateY(12px); }
+        82%, 97% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(12px); }
+      }
+
+      /* Progress Bar Animation */
+      @keyframes progress {
+        0% { width: 0px; }
+        100% { width: 1200px; }
+      }
+
+      /* Live indicator blink */
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+      }
+
+      /* Logo pulse */
+      @keyframes floatLogo {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-6px) scale(1.02); }
+      }
+
+      .slide-1 { animation: slide1 20s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+      .slide-2 { animation: slide2 20s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+      .slide-3 { animation: slide3 20s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+      .slide-4 { animation: slide4 20s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+      .slide-5 { animation: slide5 20s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+
+      .progress-bar { animation: progress 20s linear infinite; }
+      .live-dot { animation: blink 1.8s ease-in-out infinite; }
+      .logo-anim { animation: floatLogo 4s ease-in-out infinite; transform-origin: center; }
+    </style>
+
+    <!-- Background Gradients -->
+    <radialGradient id="gradIndigo" cx="20%" cy="15%" r="65%">
+      <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.45"/>
       <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="bgGrad2" cx="80%" cy="90%" r="55%">
-      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.30"/>
+    <radialGradient id="gradPurple" cx="80%" cy="85%" r="60%">
+      <stop offset="0%" stop-color="#9333ea" stop-opacity="0.38"/>
       <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="bgGrad3" cx="50%" cy="50%" r="45%">
-      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.15"/>
+    <radialGradient id="gradTeal" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0d9488" stop-opacity="0.22"/>
       <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
     </radialGradient>
 
-    <!-- Logo gradient -->
-    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <!-- Linear Accents -->
+    <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#6366f1"/>
       <stop offset="50%" stop-color="#a855f7"/>
       <stop offset="100%" stop-color="#06b6d4"/>
     </linearGradient>
 
-    <!-- Card glow -->
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="25" result="blur"/>
-      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    <linearGradient id="progGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+
+    <!-- Glass filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000000" flood-opacity="0.5"/>
     </filter>
   </defs>
 
-  <!-- Background base -->
-  <rect width="1200" height="630" rx="16" fill="#020617"/>
-  <rect width="1200" height="630" fill="url(#bgGrad1)"/>
-  <rect width="1200" height="630" fill="url(#bgGrad2)"/>
-  <rect width="1200" height="630" fill="url(#bgGrad3)"/>
+  <!-- Base Canvas -->
+  <rect width="1200" height="640" rx="16" fill="#020617"/>
+  <rect width="1200" height="640" fill="url(#gradIndigo)"/>
+  <rect width="1200" height="640" fill="url(#gradPurple)"/>
+  <rect width="1200" height="640" fill="url(#gradTeal)"/>
 
-  <!-- Subtle grid pattern -->
-  <g opacity="0.08" stroke="#ffffff" stroke-width="1">
-    <line x1="0" y1="100" x2="1200" y2="100"/>
-    <line x1="0" y1="200" x2="1200" y2="200"/>
-    <line x1="0" y1="300" x2="1200" y2="300"/>
-    <line x1="0" y1="400" x2="1200" y2="400"/>
-    <line x1="0" y1="500" x2="1200" y2="500"/>
-    <line x1="200" y1="0" x2="200" y2="630"/>
-    <line x1="400" y1="0" x2="400" y2="630"/>
-    <line x1="600" y1="0" x2="600" y2="630"/>
-    <line x1="800" y1="0" x2="800" y2="630"/>
-    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  <!-- Subtle Blueprint Grid -->
+  <g opacity="0.06" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="80" x2="1200" y2="80"/>
+    <line x1="0" y1="180" x2="1200" y2="180"/>
+    <line x1="0" y1="280" x2="1200" y2="280"/>
+    <line x1="0" y1="380" x2="1200" y2="380"/>
+    <line x1="0" y1="480" x2="1200" y2="480"/>
+    <line x1="0" y1="580" x2="1200" y2="580"/>
+    <line x1="150" y1="0" x2="150" y2="640"/>
+    <line x1="300" y1="0" x2="300" y2="640"/>
+    <line x1="450" y1="0" x2="450" y2="640"/>
+    <line x1="600" y1="0" x2="600" y2="640"/>
+    <line x1="750" y1="0" x2="750" y2="640"/>
+    <line x1="900" y1="0" x2="900" y2="640"/>
+    <line x1="1050" y1="0" x2="1050" y2="640"/>
   </g>
 
-  <!-- Top Pill Badge -->
-  <g transform="translate(460, 48)">
-    <rect width="280" height="38" rx="19" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5" opacity="0.9"/>
-    <circle cx="24" cy="19" r="5" fill="#10b981"/>
-    <text x="38" y="24" fill="#c7d2fe" font-size="13" font-weight="700" letter-spacing="1">PRÉSENTATION INTERACTIVE</text>
+  <!-- ─── TOP PLAYER CONTROLS BAR ─── -->
+  <rect x="0" y="0" width="1200" height="52" fill="#0b0f19" opacity="0.85"/>
+  <line x1="0" y1="52" x2="1200" y2="52" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Window Dots -->
+  <circle cx="28" cy="26" r="6" fill="#ef4444"/>
+  <circle cx="48" cy="26" r="6" fill="#f59e0b"/>
+  <circle cx="68" cy="26" r="6" fill="#10b981"/>
+
+  <!-- Live Status & Center Pill -->
+  <g transform="translate(430, 12)">
+    <rect width="340" height="28" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+    <circle cx="20" cy="14" r="4.5" fill="#10b981" class="live-dot"/>
+    <text x="34" y="19" fill="#94a3b8" font-size="12" font-weight="700" letter-spacing="1">AUTOPLAY • KALYO SHOWCASE (5 SCÈNES)</text>
   </g>
 
-  <!-- 3D Prism Logo Icon (K) -->
-  <g transform="translate(600, 190) scale(1.1)">
-    <circle cx="0" cy="0" r="62" fill="url(#logoGrad)" filter="url(#glow)" opacity="0.5"/>
-    <rect x="-48" y="-48" width="96" height="96" rx="26" fill="#0f172a" stroke="url(#logoGrad)" stroke-width="2.5"/>
-    <path d="M -18 -26 L -18 26 M -18 0 L 16 -24 M -6 -5 L 18 26" stroke="url(#logoGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Top Right Badge -->
+  <text x="1170" y="32" text-anchor="end" fill="#64748b" font-size="12" font-weight="600">PFE MORITSOFT 2026</text>
+
+  <!-- ─── SLIDE 1 : REVEAL KALYO (0s - 4s) ─── -->
+  <g class="slide-1" transform="translate(600, 310)">
+    <!-- 3D Prism Logo -->
+    <g transform="translate(0, -90)" class="logo-anim">
+      <rect x="-42" y="-42" width="84" height="84" rx="22" fill="#0f172a" stroke="url(#neonGrad)" stroke-width="3" filter="url(#shadow)"/>
+      <path d="M -16 -22 L -16 22 M -16 0 L 14 -20 M -4 -4 L 16 22" stroke="url(#neonGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </g>
+    <text x="0" y="35" text-anchor="middle" fill="#ffffff" font-size="52" font-weight="900" letter-spacing="-1">Kalyo (كاليو)</text>
+    <text x="0" y="75" text-anchor="middle" fill="#818cf8" font-size="19" font-weight="700" letter-spacing="1.5">PLATEFORME SAAS MAROCAINE DE GESTION DE PROJETS</text>
+    <text x="0" y="112" text-anchor="middle" fill="#94a3b8" font-size="15">Stage PFE au sein de MORITSOFT • Lead Dev: Abdelbasste Errifi</text>
+
+    <!-- Scene badge -->
+    <rect x="-70" y="145" width="140" height="28" rx="14" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+    <text x="0" y="163" text-anchor="middle" fill="#c7d2fe" font-size="11" font-weight="800">SCÈNE 1 / 5</text>
   </g>
 
-  <!-- Title: Kalyo -->
-  <text x="600" y="325" text-anchor="middle" font-size="58" font-weight="900" fill="#ffffff" letter-spacing="-1">
-    Kalyo <tspan fill="#a855f7">—</tspan> Launch Presentation
-  </text>
+  <!-- ─── SLIDE 2 : LA PROBLÉMATIQUE (4s - 8s) ─── -->
+  <g class="slide-2" transform="translate(600, 305)">
+    <rect x="-85" y="-140" width="170" height="30" rx="15" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
+    <text x="0" y="-120" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="800" letter-spacing="1">🔴 LE CONSTAT DU MARCHÉ</text>
 
-  <!-- Subtitle Arabic & French -->
-  <text x="600" y="372" text-anchor="middle" font-size="20" font-weight="600" fill="#94a3b8" letter-spacing="2">
-    منصة رقمية مغربية شاملة لإدارة المشاريع والتدفقات المالية
-  </text>
-  <text x="600" y="405" text-anchor="middle" font-size="15" font-weight="500" fill="#64748b">
-    Projet de Fin d'Études (PFE) — Stage au sein de MORITSOFT
-  </text>
+    <text x="0" y="-60" text-anchor="middle" fill="#ffffff" font-size="38" font-weight="900">Les PME marocaines perdent du temps</text>
+    <text x="0" y="-20" text-anchor="middle" fill="#f87171" font-size="34" font-weight="900">avec des outils éparpillés</text>
 
-  <!-- Feature Cards Row -->
-  <g transform="translate(150, 445)">
-    <!-- Card 1 -->
-    <rect x="0" y="0" width="270" height="85" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.2" opacity="0.9"/>
-    <text x="24" y="36" fill="#818cf8" font-size="18">👔</text>
-    <text x="56" y="34" fill="#f8fafc" font-size="15" font-weight="700">Espace Direction</text>
-    <text x="24" y="60" fill="#94a3b8" font-size="12">Pilotage CA, Trésorerie &amp; TVA (MAD)</text>
+    <g transform="translate(-420, 30)">
+      <!-- Card 1 -->
+      <rect x="0" y="0" width="260" height="110" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="24" y="42" font-size="28">📊</text>
+      <text x="65" y="40" fill="#ffffff" font-size="16" font-weight="700">Excel &amp; WhatsApp</text>
+      <text x="24" y="74" fill="#94a3b8" font-size="13">Données dispersées et</text>
+      <text x="24" y="94" fill="#94a3b8" font-size="13">aucune traçabilité fiable.</text>
 
-    <!-- Card 2 -->
-    <rect x="315" y="0" width="270" height="85" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.2" opacity="0.9"/>
-    <text x="339" y="36" fill="#34d399" font-size="18">🤝</text>
-    <text x="371" y="34" fill="#f8fafc" font-size="15" font-weight="700">Portail Client</text>
-    <text x="339" y="60" fill="#94a3b8" font-size="12">Validation jalons &amp; suivi factures</text>
+      <!-- Card 2 -->
+      <rect x="290" y="0" width="260" height="110" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="314" y="42" font-size="28">💸</text>
+      <text x="355" y="40" fill="#ffffff" font-size="16" font-weight="700">Créances oubliées</text>
+      <text x="314" y="74" fill="#94a3b8" font-size="13">Retards de paiement et TVA</text>
+      <text x="314" y="94" fill="#94a3b8" font-size="13">non calculée en temps réel.</text>
 
-    <!-- Card 3 -->
-    <rect x="630" y="0" width="270" height="85" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.2" opacity="0.9"/>
-    <text x="654" y="36" fill="#22d3ee" font-size="18">⚡</text>
-    <text x="686" y="34" fill="#f8fafc" font-size="15" font-weight="700">Démo Scénarisée</text>
-    <text x="654" y="60" fill="#94a3b8" font-size="12">6 scènes interactives animées</text>
+      <!-- Card 3 -->
+      <rect x="580" y="0" width="260" height="110" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1.2" filter="url(#shadow)"/>
+      <text x="604" y="42" font-size="28">🔒</text>
+      <text x="645" y="40" fill="#ffffff" font-size="16" font-weight="700">Zéro Espace Client</text>
+      <text x="604" y="74" fill="#94a3b8" font-size="13">Clients qui relancent par email</text>
+      <text x="604" y="94" fill="#94a3b8" font-size="13">sans accès à leurs livrables.</text>
+    </g>
+
+    <rect x="-70" y="170" width="140" height="28" rx="14" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+    <text x="0" y="188" text-anchor="middle" fill="#c7d2fe" font-size="11" font-weight="800">SCÈNE 2 / 5</text>
   </g>
 
-  <!-- Interactive Call to Action Bar -->
-  <g transform="translate(390, 560)">
-    <rect width="420" height="42" rx="21" fill="url(#logoGrad)"/>
-    <text x="210" y="26" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="800" letter-spacing="1">
-      ▶ OUVRIR LA PRÉSENTATION INTERACTIVE (HTML)
-    </text>
+  <!-- ─── SLIDE 3 : LA SOLUTION KALYO (8s - 12s) ─── -->
+  <g class="slide-3" transform="translate(600, 305)">
+    <rect x="-90" y="-140" width="180" height="30" rx="15" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+    <text x="0" y="-120" text-anchor="middle" fill="#6ee7b7" font-size="12" font-weight="800" letter-spacing="1">🟢 LA SOLUTION UNIFIÉE</text>
+
+    <text x="0" y="-60" text-anchor="middle" fill="#ffffff" font-size="40" font-weight="900">Un Écosystème Tout-en-Un</text>
+    <text x="0" y="-15" text-anchor="middle" fill="#34d399" font-size="28" font-weight="800">Conçu pour l'Entreprise Marocaine 🇲🇦</text>
+
+    <g transform="translate(-400, 25)">
+      <rect x="0" y="0" width="370" height="115" rx="16" fill="#0f172a" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="24" y="42" font-size="26">⚡</text>
+      <text x="65" y="40" fill="#ffffff" font-size="17" font-weight="800">Gestion WBS &amp; Tâches</text>
+      <text x="24" y="72" fill="#94a3b8" font-size="13">Découpage fin des projets en jalons,</text>
+      <text x="24" y="92" fill="#94a3b8" font-size="13">dates limites et avancement live.</text>
+
+      <rect x="420" y="0" width="370" height="115" rx="16" fill="#0f172a" stroke="#06b6d4" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="444" y="42" font-size="26">🇲🇦</text>
+      <text x="485" y="40" fill="#ffffff" font-size="17" font-weight="800">Devise MAD &amp; TVA 20%</text>
+      <text x="444" y="72" fill="#94a3b8" font-size="13">Facturation marocaine conforme HT/TTC,</text>
+      <text x="444" y="92" fill="#94a3b8" font-size="13">acompte et suivi du solde restant dû.</text>
+    </g>
+
+    <rect x="-70" y="170" width="140" height="28" rx="14" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+    <text x="0" y="188" text-anchor="middle" fill="#c7d2fe" font-size="11" font-weight="800">SCÈNE 3 / 5</text>
   </g>
+
+  <!-- ─── SLIDE 4 : ESPACE DIRECTION (12s - 16s) ─── -->
+  <g class="slide-4" transform="translate(600, 305)">
+    <rect x="-95" y="-140" width="190" height="30" rx="15" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+    <text x="0" y="-120" text-anchor="middle" fill="#c7d2fe" font-size="12" font-weight="800" letter-spacing="1">👔 ESPACE DIRECTION (/login/admin)</text>
+
+    <text x="0" y="-60" text-anchor="middle" fill="#ffffff" font-size="38" font-weight="900">Tableau de Bord &amp; Simulateur de Cashflow</text>
+    <text x="0" y="-20" text-anchor="middle" fill="#818cf8" font-size="20" font-weight="600">Pilotage dynamique du chiffre d'affaires et des créances</text>
+
+    <!-- Financial KPI preview cards -->
+    <g transform="translate(-450, 25)">
+      <rect x="0" y="0" width="280" height="110" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1" filter="url(#shadow)"/>
+      <text x="20" y="32" fill="#94a3b8" font-size="12" font-weight="700">CHIFFRE D'AFFAIRES (MAD)</text>
+      <text x="20" y="68" fill="#38bdf8" font-size="28" font-weight="900">184 500 DH</text>
+      <text x="20" y="95" fill="#10b981" font-size="12">↗ +18.4% ce trimestre</text>
+
+      <rect x="310" y="0" width="280" height="110" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1" filter="url(#shadow)"/>
+      <text x="330" y="32" fill="#94a3b8" font-size="12" font-weight="700">CRÉANCES EN ATTENTE</text>
+      <text x="330" y="68" fill="#f59e0b" font-size="28" font-weight="900">42 800 DH</text>
+      <text x="330" y="95" fill="#fbbf24" font-size="12">3 factures à relancer</text>
+
+      <rect x="620" y="0" width="280" height="110" rx="14" fill="#0f172a" stroke="#334155" stroke-width="1" filter="url(#shadow)"/>
+      <text x="640" y="32" fill="#94a3b8" font-size="12" font-weight="700">PROJETS EN COURS</text>
+      <text x="640" y="68" fill="#a855f7" font-size="28" font-weight="900">12 Actifs</text>
+      <text x="640" y="95" fill="#c084fc" font-size="12">89% de livrables validés</text>
+    </g>
+
+    <rect x="-70" y="170" width="140" height="28" rx="14" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+    <text x="0" y="188" text-anchor="middle" fill="#c7d2fe" font-size="11" font-weight="800">SCÈNE 4 / 5</text>
+  </g>
+
+  <!-- ─── SLIDE 5 : PORTAIL CLIENT & SOUTENANCE (16s - 20s) ─── -->
+  <g class="slide-5" transform="translate(600, 305)">
+    <rect x="-95" y="-140" width="190" height="30" rx="15" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+    <text x="0" y="-120" text-anchor="middle" fill="#6ee7b7" font-size="12" font-weight="800" letter-spacing="1">🤝 PORTAIL CLIENT (/login/client)</text>
+
+    <text x="0" y="-60" text-anchor="middle" fill="#ffffff" font-size="40" font-weight="900">Espace Sécurisé Partenaire</text>
+    <text x="0" y="-18" text-anchor="middle" fill="#34d399" font-size="20" font-weight="600">Consultation des livrables &amp; Fiches de facturation imprimables</text>
+
+    <g transform="translate(-400, 25)">
+      <rect x="0" y="0" width="370" height="115" rx="16" fill="#0f172a" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="24" y="42" font-size="26">📑</text>
+      <text x="65" y="40" fill="#ffffff" font-size="17" font-weight="800">Factures &amp; Reçus PDF</text>
+      <text x="24" y="72" fill="#94a3b8" font-size="13">Historique transparent des règlements,</text>
+      <text x="24" y="92" fill="#94a3b8" font-size="13">téléchargement et vue d'impression.</text>
+
+      <rect x="420" y="0" width="370" height="115" rx="16" fill="#0f172a" stroke="#6366f1" stroke-width="1.5" filter="url(#shadow)"/>
+      <text x="444" y="42" font-size="26">🧪</text>
+      <text x="485" y="40" fill="#ffffff" font-size="17" font-weight="800">Démo Soutenance 1-Clic</text>
+      <text x="444" y="72" fill="#94a3b8" font-size="13">Boutons de pré-remplissage express</text>
+      <text x="444" y="92" fill="#94a3b8" font-size="13">pour le jury (admin_tester / user_tester).</text>
+    </g>
+
+    <rect x="-70" y="170" width="140" height="28" rx="14" fill="#1e1b4b" stroke="#6366f1" stroke-width="1"/>
+    <text x="0" y="188" text-anchor="middle" fill="#c7d2fe" font-size="11" font-weight="800">SCÈNE 5 / 5</text>
+  </g>
+
+  <!-- ─── BOTTOM PROGRESS BAR (20s LOOP) ─── -->
+  <rect x="0" y="634" width="1200" height="6" fill="#0f172a"/>
+  <rect x="0" y="634" height="6" fill="url(#progGrad)" class="progress-bar"/>
 </svg>

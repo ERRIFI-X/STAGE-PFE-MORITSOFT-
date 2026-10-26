@@ -43,17 +43,19 @@
 
 ---
 
-## 🎬 Présentation Interactive du Projet (Kalyo Launch)
+## 🎬 Présentation Automatique & Interactive (Showcase Autoplay)
 
 <div align="center">
 
-<a href="kalyo-launch.html" target="_blank" title="Cliquez pour lancer la présentation interactive Kalyo">
+<a href="kalyo-launch.html" target="_blank" title="Cliquez pour ouvrir la version interactive plein écran">
   <img src="docs/kalyo-launch-banner.svg" alt="Kalyo Interactive Launch Showcase" width="100%" />
 </a>
 
 <br />
 
-[![Lancer la Présentation Interactive](https://img.shields.io/badge/▶_Lancer_la_Présentation_Interactive-kalyo--launch.html-6366f1?style=for-the-badge&logo=html5&logoColor=white)](kalyo-launch.html)
+[![Lancer la Présentation Plein Écran](https://img.shields.io/badge/▶_Ouvrir_la_Présentation_Interactive_HTML-kalyo--launch.html-6366f1?style=for-the-badge&logo=html5&logoColor=white)](kalyo-launch.html)
+
+> ⚡ **Autoplay en continu** : Le lecteur animé ci-dessus fait défiler automatiquement les 5 scènes clés du projet en boucle continue. Cliquez dessus pour explorer la version interactive complète avec navigation au clavier.
 
 </div>
 
