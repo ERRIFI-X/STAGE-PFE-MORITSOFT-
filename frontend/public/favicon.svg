@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="fav-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="fav-spine-l" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="50%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#1E1B4B" />
+    </linearGradient>
+    <linearGradient id="fav-spine-r" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="60%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#4338CA" />
+    </linearGradient>
+    <linearGradient id="fav-arm-t-top" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="45%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#E0F2FE" />
+    </linearGradient>
+    <linearGradient id="fav-arm-t-bot" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" />
+      <stop offset="70%" stop-color="#0284C7" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="fav-arm-b-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4338CA" />
+      <stop offset="60%" stop-color="#0EA5E9" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+    <linearGradient id="fav-arm-b-bot" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#312E81" />
+      <stop offset="60%" stop-color="#1E3A8A" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded squircle tile -->
+  <rect width="100" height="100" rx="26" fill="url(#fav-bg)" />
+  <rect width="98" height="98" x="1" y="1" rx="25" stroke="#334155" stroke-opacity="0.4" stroke-width="2" fill="none" />
+
+  <!-- Monogram Glyph (Scaled centered) -->
+  <g transform="translate(10, 10) scale(0.8)">
+    <polygon points="18,14 32,14 32,86 18,86" fill="url(#fav-spine-l)" />
+    <polygon points="32,14 46,14 46,50 32,50" fill="url(#fav-spine-r)" />
+    <polygon points="32,50 46,50 46,86 32,86" fill="url(#fav-spine-l)" />
+    <polygon points="46,14 80,14 80,33 46,50" fill="url(#fav-arm-t-top)" />
+    <polygon points="46,50 80,33 58,50" fill="url(#fav-arm-t-bot)" />
+    <polygon points="46,50 58,50 80,67" fill="url(#fav-arm-b-top)" />
+    <polygon points="46,50 80,67 80,86 46,86" fill="url(#fav-arm-b-bot)" />
+    <line x1="32" y1="14" x2="32" y2="86" stroke="#93C5FD" stroke-width="1.2" opacity="0.85" />
+    <line x1="46" y1="50" x2="80" y2="33" stroke="#BAE6FD" stroke-width="1.2" opacity="0.9" />
+    <line x1="46" y1="50" x2="80" y2="67" stroke="#67E8F9" stroke-width="1.2" opacity="0.75" />
+  </g>
+</svg>

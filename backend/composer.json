@@ -1,0 +1,25 @@
+{
+    "name": "errifi-x/gestion-de-project",
+    "description": "Project management system API - Kalyo",
+    "authors": [
+        {
+            "name": "Abdelbasste Errifi (ERRIFI-X)",
+            "email": "abdoerrifi05@gmail.com",
+            "role": "Lead Developer & System Architect"
+        },
+        {
+            "name": "Imad Bouafouss (2IB2)",
+            "email": "i.bouafouss@gmail.com",
+            "role": "Frontend Developer"
+        },
+        {
+            "name": "Omar Ouka (oukaomar8-max)",
+            "email": "oukaomar8@gmail.com",
+            "role": "QA & Tester"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "firebase/php-jwt": "^7.0"
+    }
+}
