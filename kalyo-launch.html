@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kalyo — Launch</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #020617;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCENE SYSTEM ─── */
+    .scene {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s cubic-bezier(.4,0,.2,1);
+    }
+    .scene.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ─── PROGRESS BAR ─── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 2px;
+      background: linear-gradient(90deg, #6366f1, #a855f7, #06b6d4);
+      width: 0%;
+      transition: width 0.4s ease;
+      z-index: 999;
+    }
+
+    /* ─── SCENE COUNTER ─── */
+    #scene-counter {
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px;
+      z-index: 999;
+    }
+    .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .dot.active { background: #6366f1; transform: scale(1.4); }
+
+    /* ─── SKIP BUTTON ─── */
+    #skip-btn {
+      position: fixed; top: 24px; right: 24px;
+      padding: 8px 20px; border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.6);
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 999;
+    }
+    #skip-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+    /* ─── LOGO MARK ─── */
+    .kalyo-k {
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 18px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
+      box-shadow: 0 0 60px rgba(99,102,241,0.5), 0 0 120px rgba(99,102,241,0.2);
+      color: #fff;
+    }
+
+    /* ─── ANIMATED GRADIENT TEXT ─── */
+    .grad-text {
+      background: linear-gradient(135deg, #fff 0%, #a5b4fc 40%, #c084fc 70%, #67e8f9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── PARTICLES ─── */
+    #particles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ─── GLOW BLOBS ─── */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.15;
+      animation: drift ease-in-out infinite alternate;
+    }
+    @keyframes drift {
+      0%   { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 20px) scale(1.1); }
+    }
+
+    /* ─── CARD SHINE ─── */
+    .card-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    .card-shine::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.04) 50%, transparent 70%);
+      animation: shine 3s ease-in-out infinite;
+    }
+    @keyframes shine {
+      0%   { transform: translateX(-100%) translateY(-100%); }
+      100% { transform: translateX(100%) translateY(100%); }
+    }
+
+    /* ─── TYPEWRITER ─── */
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #6366f1;
+      animation: typing 1.8s steps(30) forwards, blink 0.6s step-end infinite 1.8s;
+    }
+    @keyframes typing { from { width: 0 } to { width: 100% } }
+    @keyframes blink { 0%,100% { border-color: #6366f1 } 50% { border-color: transparent } }
+
+    /* ─── FEATURE ICON GLOW ─── */
+    .feat-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      position: relative;
+    }
+    .feat-icon::after {
+      content: '';
+      position: absolute; inset: -4px;
+      border-radius: 18px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .feat-icon:hover::after { opacity: 1; }
+
+    /* ─── SCENE SPECIFIC ─── */
+    .stat-number {
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    /* ─── SLIDE-IN ANIMATIONS ─── */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .anim-up   { animation: slideUp 0.7s cubic-bezier(.4,0,.2,1) both; }
+    .anim-left { animation: slideLeft 0.7s cubic-bezier(.4,0,.2,1) both; }
+    .anim-scale { animation: scaleIn 0.6s cubic-bezier(.4,0,.2,1) both; }
+    .anim-fade  { animation: fadeIn 0.6s ease both; }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.4s; }
+    .delay-4 { animation-delay: 0.55s; }
+    .delay-5 { animation-delay: 0.7s; }
+    .delay-6 { animation-delay: 0.85s; }
+
+    /* ─── MOCK DASHBOARD ─── */
+    .mock-bar { height: 6px; border-radius: 999px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      .scene-inner { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+<div id="particles"></div>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<!-- DOTS -->
+<div id="scene-counter"></div>
+
+<!-- SKIP -->
+<button id="skip-btn" onclick="goToScene(totalScenes - 1)">Passer →</button>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 0 — LOGO REVEAL      ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-0">
+  <!-- blobs -->
+  <div class="blob" style="width:600px;height:600px;background:#6366f1;top:-150px;left:-150px;animation-duration:8s;"></div>
+  <div class="blob" style="width:500px;height:500px;background:#a855f7;bottom:-100px;right:-100px;animation-duration:11s;"></div>
+
+  <div style="position:relative;z-index:1;text-align:center;">
+    <div class="anim-scale" style="margin-bottom:32px;">
+      <div class="kalyo-k" style="width:120px;height:120px;font-size:64px;margin:0 auto;">K</div>
+    </div>
+    <h1 class="grad-text anim-up delay-2" style="font-size:clamp(48px,10vw,96px);font-weight:900;letter-spacing:-0.04em;line-height:1;">
+      Kalyo
+    </h1>
+    <p class="anim-up delay-3" style="margin-top:16px;font-size:18px;color:rgba(255,255,255,0.5);font-weight:400;letter-spacing:0.1em;text-transform:uppercase;">
+      منصة مغربية لإدارة المشاريع
+    </p>
+    <p class="anim-fade delay-5" style="margin-top:40px;font-size:13px;color:rgba(255,255,255,0.25);letter-spacing:0.05em;">
+      Projet de Fin d'Études — PFE 2026
+    </p>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 1 — PROBLÈME         ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-1">
+  <div class="blob" style="width:400px;height:400px;background:#ef4444;top:-80px;right:-80px;animation-duration:9s;opacity:0.1;"></div>
+
+  <div style="position:relative;z-index:1;max-width:680px;text-align:center;padding:24px;">
+    <p class="anim-up" style="font-size:13px;color:#f87171;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:24px;">
+      🔴 Le problème
+    </p>
+    <h2 class="anim-up delay-1" style="font-size:clamp(28px,5vw,52px);font-weight:900;letter-spacing:-0.03em;line-height:1.15;margin-bottom:24px;">
+      Les PME marocaines gèrent leurs projets avec des outils <span style="color:#f87171;text-decoration:line-through;">éparpillés</span>
+    </h2>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px;">
+      <div class="card-shine anim-up delay-2" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:16px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:8px;">📊</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.6);">Excel & WhatsApp pour les finances</p>
+      </div>
+      <div class="card-shine anim-up delay-3" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:16px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:8px;">😵</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.6);">Pas de visibilité sur les paiements clients</p>
+      </div>
+      <div class="card-shine anim-up delay-4" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:16px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:8px;">🔓</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.6);">Aucun espace sécurisé pour les clients</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 2 — SOLUTION         ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-2">
+  <div class="blob" style="width:500px;height:500px;background:#6366f1;bottom:-100px;left:-100px;animation-duration:10s;"></div>
+  <div class="blob" style="width:400px;height:400px;background:#06b6d4;top:-80px;right:-80px;animation-duration:12s;"></div>
+
+  <div style="position:relative;z-index:1;max-width:720px;text-align:center;padding:24px;">
+    <p class="anim-up" style="font-size:13px;color:#6366f1;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:24px;">
+      ✅ La solution
+    </p>
+    <h2 class="grad-text anim-up delay-1" style="font-size:clamp(30px,5vw,56px);font-weight:900;letter-spacing:-0.03em;line-height:1.15;margin-bottom:16px;">
+      Une plateforme SaaS tout-en-un, conçue pour le Maroc
+    </h2>
+    <p class="anim-up delay-2" style="font-size:17px;color:rgba(255,255,255,0.55);line-height:1.7;max-width:580px;margin:0 auto 40px;">
+      Kalyo centralise la gestion de projets, la trésorerie et la collaboration client dans une interface moderne en <strong style="color:#fff;">Dirham Marocain (MAD)</strong>.
+    </p>
+    <div class="anim-scale delay-3">
+      <div class="kalyo-k" style="width:80px;height:80px;font-size:42px;margin:0 auto;">K</div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 3 — PORTAILS         ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-3">
+  <div style="position:relative;z-index:1;max-width:820px;width:100%;padding:24px;">
+    <p class="anim-up" style="font-size:13px;color:#a855f7;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;text-align:center;">
+      Deux espaces distincts
+    </p>
+    <h2 class="anim-up delay-1" style="font-size:clamp(26px,4vw,46px);font-weight:900;letter-spacing:-0.03em;text-align:center;margin-bottom:32px;">
+      Un accès taillé pour chaque rôle
+    </h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <!-- Admin -->
+      <div class="card-shine anim-up delay-2" style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(168,85,247,0.1));border:1px solid rgba(99,102,241,0.3);border-radius:24px;padding:28px;">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(99,102,241,0.2);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;">🛡️</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:8px;">Espace Administration</h3>
+        <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:16px;">Dashboard financier, gestion complète des projets, clients, factures et paiements.</p>
+        <code style="font-size:12px;color:#818cf8;background:rgba(99,102,241,0.1);padding:4px 10px;border-radius:6px;">/login/admin</code>
+      </div>
+      <!-- Client -->
+      <div class="card-shine anim-up delay-3" style="background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(16,185,129,0.08));border:1px solid rgba(6,182,212,0.25);border-radius:24px;padding:28px;">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(6,182,212,0.15);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px;">👤</div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:8px;">Portail Client</h3>
+        <p style="font-size:13px;color:rgba(255,255,255,0.55);line-height:1.7;margin-bottom:16px;">Suivi des projets en temps réel, consultation & règlement des factures, approbation des offres.</p>
+        <code style="font-size:12px;color:#22d3ee;background:rgba(6,182,212,0.1);padding:4px 10px;border-radius:6px;">/login/client</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 4 — FEATURES         ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-4">
+  <div class="blob" style="width:500px;height:500px;background:#a855f7;top:-100px;left:-100px;animation-duration:13s;"></div>
+
+  <div style="position:relative;z-index:1;max-width:820px;width:100%;padding:24px;">
+    <p class="anim-up" style="font-size:13px;color:#c084fc;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;text-align:center;">
+      Fonctionnalités clés
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+      <div class="card-shine anim-up delay-1" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:10px;">📈</div>
+        <p style="font-size:14px;font-weight:700;margin-bottom:4px;">Dashboard Live</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.45);">KPIs & graphiques en temps réel</p>
+      </div>
+      <div class="card-shine anim-up delay-2" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:10px;">🧾</div>
+        <p style="font-size:14px;font-weight:700;margin-bottom:4px;">Facturation MAD</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.45);">Génération & impression PDF</p>
+      </div>
+      <div class="card-shine anim-up delay-3" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:10px;">✅</div>
+        <p style="font-size:14px;font-weight:700;margin-bottom:4px;">Tâches & sous-tâches</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.45);">Attribution & workflow complet</p>
+      </div>
+      <div class="card-shine anim-up delay-2" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:10px;">💰</div>
+        <p style="font-size:14px;font-weight:700;margin-bottom:4px;">Trésorerie & Paiements</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.45);">Triggers MySQL automatiques</p>
+      </div>
+      <div class="card-shine anim-up delay-3" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:10px;">🤝</div>
+        <p style="font-size:14px;font-weight:700;margin-bottom:4px;">Approbation Client</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.45);">Accepter / refuser les offres</p>
+      </div>
+      <div class="card-shine anim-up delay-4" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:10px;">🔔</div>
+        <p style="font-size:14px;font-weight:700;margin-bottom:4px;">Notifications Live</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.45);">Journal d'activité complet</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 5 — TECH STACK       ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-5">
+  <div class="blob" style="width:400px;height:400px;background:#06b6d4;bottom:-80px;right:-80px;animation-duration:9s;"></div>
+
+  <div style="position:relative;z-index:1;max-width:720px;width:100%;padding:24px;text-align:center;">
+    <p class="anim-up" style="font-size:13px;color:#22d3ee;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;">
+      Stack Technique
+    </p>
+    <h2 class="anim-up delay-1" style="font-size:clamp(24px,4vw,42px);font-weight:900;letter-spacing:-0.03em;margin-bottom:32px;">
+      Technologie de pointe, <span class="grad-text">100% moderne</span>
+    </h2>
+    
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;">
+      <!-- Backend -->
+      <div class="card-shine anim-up delay-2" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;">
+        <p style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">⚙️ Backend</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🐘</span>
+            <div><p style="font-size:14px;font-weight:700;">PHP 8.2+</p><p style="font-size:11px;color:rgba(255,255,255,0.4);">API REST · MVC Architecture</p></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🔐</span>
+            <div><p style="font-size:14px;font-weight:700;">JWT Auth</p><p style="font-size:11px;color:rgba(255,255,255,0.4);">firebase/php-jwt · Bcrypt</p></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🗄️</span>
+            <div><p style="font-size:14px;font-weight:700;">MySQL + PDO</p><p style="font-size:11px;color:rgba(255,255,255,0.4);">Triggers & Relations complexes</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- Frontend -->
+      <div class="card-shine anim-up delay-3" style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;">
+        <p style="font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">🎨 Frontend</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">⚛️</span>
+            <div><p style="font-size:14px;font-weight:700;">React 19 + Vite</p><p style="font-size:11px;color:rgba(255,255,255,0.4);">React Router 7 · Axios</p></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">🎨</span>
+            <div><p style="font-size:14px;font-weight:700;">Tailwind CSS v4</p><p style="font-size:11px;color:rgba(255,255,255,0.4);">Dark/Light mode · Lucide Icons</p></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:18px;">📧</span>
+            <div><p style="font-size:14px;font-weight:700;">EmailJS</p><p style="font-size:11px;color:rgba(255,255,255,0.4);">Hot Toast Notifications</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 6 — MOCK DASHBOARD   ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-6">
+  <div class="blob" style="width:600px;height:600px;background:#6366f1;top:-200px;left:-200px;animation-duration:14s;"></div>
+
+  <div style="position:relative;z-index:1;max-width:860px;width:100%;padding:24px;">
+    <p class="anim-up" style="font-size:13px;color:#818cf8;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;text-align:center;">
+      Interface Admin
+    </p>
+
+    <!-- Mock browser -->
+    <div class="card-shine anim-scale delay-1" style="border:1px solid rgba(255,255,255,0.1);border-radius:20px;overflow:hidden;background:#0f172a;">
+      <!-- Browser bar -->
+      <div style="background:#1e293b;padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <div style="width:10px;height:10px;border-radius:50%;background:#ef4444;"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:#22c55e;"></div>
+        <div style="flex:1;background:rgba(255,255,255,0.05);border-radius:6px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.3);margin:0 16px;">localhost:5173/admin/dashboard</div>
+      </div>
+      <!-- Dashboard UI -->
+      <div style="display:grid;grid-template-columns:200px 1fr;min-height:340px;">
+        <!-- Sidebar -->
+        <div style="background:#0a0f1e;border-right:1px solid rgba(255,255,255,0.05);padding:16px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px;">
+            <div class="kalyo-k" style="width:32px;height:32px;font-size:16px;border-radius:8px;">K</div>
+            <span style="font-weight:800;font-size:15px;">Kalyo</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="padding:8px 10px;border-radius:10px;background:rgba(99,102,241,0.15);color:#818cf8;font-size:12px;font-weight:600;">📊 Dashboard</div>
+            <div style="padding:8px 10px;border-radius:10px;color:rgba(255,255,255,0.4);font-size:12px;">📁 Projets</div>
+            <div style="padding:8px 10px;border-radius:10px;color:rgba(255,255,255,0.4);font-size:12px;">👥 Clients</div>
+            <div style="padding:8px 10px;border-radius:10px;color:rgba(255,255,255,0.4);font-size:12px;">🧾 Factures</div>
+            <div style="padding:8px 10px;border-radius:10px;color:rgba(255,255,255,0.4);font-size:12px;">💰 Paiements</div>
+            <div style="padding:8px 10px;border-radius:10px;color:rgba(255,255,255,0.4);font-size:12px;">✅ Tâches</div>
+          </div>
+        </div>
+        <!-- Main content -->
+        <div style="padding:20px;display:flex;flex-direction:column;gap:16px;">
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+            <div style="background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:14px;">
+              <p style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;">CA Total</p>
+              <p style="font-size:20px;font-weight:900;color:#818cf8;" id="counter-ca">0</p>
+              <p style="font-size:9px;color:rgba(255,255,255,0.3);">MAD</p>
+            </div>
+            <div style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.15);border-radius:12px;padding:14px;">
+              <p style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Projets Actifs</p>
+              <p style="font-size:20px;font-weight:900;color:#4ade80;" id="counter-p">0</p>
+              <p style="font-size:9px;color:rgba(255,255,255,0.3);">en cours</p>
+            </div>
+            <div style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.15);border-radius:12px;padding:14px;">
+              <p style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Clients</p>
+              <p style="font-size:20px;font-weight:900;color:#22d3ee;" id="counter-c">0</p>
+              <p style="font-size:9px;color:rgba(255,255,255,0.3);">actifs</p>
+            </div>
+            <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);border-radius:12px;padding:14px;">
+              <p style="font-size:10px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Encaissé</p>
+              <p style="font-size:20px;font-weight:900;color:#fbbf24;" id="counter-e">0</p>
+              <p style="font-size:9px;color:rgba(255,255,255,0.3);">MAD ce mois</p>
+            </div>
+          </div>
+          <!-- Progress bars -->
+          <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;">
+            <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px;">Avancement des projets</p>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                  <span style="font-size:11px;color:rgba(255,255,255,0.6);">Portail IoT B2B</span>
+                  <span style="font-size:11px;color:#4ade80;">75%</span>
+                </div>
+                <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:999px;">
+                  <div class="mock-bar" style="width:75%;background:linear-gradient(90deg,#6366f1,#a855f7);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                  <span style="font-size:11px;color:rgba(255,255,255,0.6);">App FinTech Atlas</span>
+                  <span style="font-size:11px;color:#22d3ee;">50%</span>
+                </div>
+                <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:999px;">
+                  <div class="mock-bar" style="width:50%;background:linear-gradient(90deg,#06b6d4,#6366f1);"></div>
+                </div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+                  <span style="font-size:11px;color:rgba(255,255,255,0.6);">E-Commerce Sahara</span>
+                  <span style="font-size:11px;color:#fbbf24;">30%</span>
+                </div>
+                <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:999px;">
+                  <div class="mock-bar" style="width:30%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 7 — CLIENT PORTAL    ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-7">
+  <div class="blob" style="width:500px;height:500px;background:#06b6d4;top:-100px;right:-100px;animation-duration:11s;opacity:0.12;"></div>
+
+  <div style="position:relative;z-index:1;max-width:820px;width:100%;padding:24px;">
+    <p class="anim-up" style="font-size:13px;color:#22d3ee;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:16px;text-align:center;">
+      Portail Client
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+      <!-- Left: text -->
+      <div class="anim-up delay-1">
+        <h2 style="font-size:clamp(24px,3.5vw,40px);font-weight:900;letter-spacing:-0.03em;margin-bottom:16px;">
+          Le client est au <span class="grad-text">centre du projet</span>
+        </h2>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(6,182,212,0.15);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">👁️</div>
+            <div><p style="font-size:14px;font-weight:700;">Visibilité en temps réel</p><p style="font-size:12px;color:rgba(255,255,255,0.45);">Suivi des livrables et avancement</p></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(34,197,94,0.12);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">✅</div>
+            <div><p style="font-size:14px;font-weight:700;">Approbation des offres</p><p style="font-size:12px;color:rgba(255,255,255,0.45);">Accepter ou refuser avec motif</p></div>
+          </div>
+          <div style="display:flex;gap:12px;align-items:flex-start;">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;">🧾</div>
+            <div><p style="font-size:14px;font-weight:700;">Consultation des factures</p><p style="font-size:12px;color:rgba(255,255,255,0.45);">Vue & règlement des factures MAD</p></div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: mock offer card -->
+      <div class="card-shine anim-left delay-2" style="background:#0f172a;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:20px;">
+        <p style="font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Offre reçue</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div style="width:40px;height:40px;border-radius:10px;background:rgba(99,102,241,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;">📦</div>
+          <div>
+            <p style="font-size:14px;font-weight:700;">Portail IoT B2B</p>
+            <p style="font-size:11px;color:rgba(255,255,255,0.4);">Maroc Digital Logistics SARL</p>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+          <div><p style="font-size:10px;color:rgba(255,255,255,0.35);">Montant Total</p><p style="font-size:18px;font-weight:900;color:#6366f1;">80 000 MAD</p></div>
+          <div style="text-align:right;"><p style="font-size:10px;color:rgba(255,255,255,0.35);">Délai</p><p style="font-size:14px;font-weight:700;">90 jours</p></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <button style="padding:10px;border-radius:12px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);color:#4ade80;font-size:13px;font-weight:700;cursor:pointer;">👍 Accepter</button>
+          <button style="padding:10px;border-radius:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;font-size:13px;font-weight:700;cursor:pointer;">👎 Refuser</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 8 — STATS            ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-8">
+  <div class="blob" style="width:700px;height:700px;background:#6366f1;top:-250px;left:50%;transform:translateX(-50%);animation-duration:15s;opacity:0.1;"></div>
+
+  <div style="position:relative;z-index:1;max-width:720px;width:100%;padding:24px;text-align:center;">
+    <p class="anim-up" style="font-size:13px;color:#a5b4fc;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:40px;">
+      En chiffres
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-bottom:40px;">
+      <div class="anim-up delay-1">
+        <div class="stat-number grad-text" id="s1">10+</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:8px;">Contrôleurs API</p>
+      </div>
+      <div class="anim-up delay-2">
+        <div class="stat-number grad-text" id="s2">2</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:8px;">Portails dédiés</p>
+      </div>
+      <div class="anim-up delay-3">
+        <div class="stat-number grad-text" id="s3">100%</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:8px;">Made in Morocco 🇲🇦</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;">
+      <div class="anim-up delay-2">
+        <div class="stat-number" style="font-size:clamp(36px,6vw,72px);" id="s4">MAD</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:8px;">Devise officielle</p>
+      </div>
+      <div class="anim-up delay-3">
+        <div class="stat-number grad-text" id="s5">JWT</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:8px;">Sécurité Auth</p>
+      </div>
+      <div class="anim-up delay-4">
+        <div class="stat-number grad-text" id="s6">SaaS</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.45);margin-top:8px;">Architecture cloud-ready</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  SCENE 9 — CTA FINAL        ║
+     ╚══════════════════════════════╝ -->
+<div class="scene" id="scene-9">
+  <div class="blob" style="width:800px;height:800px;background:linear-gradient(135deg,#6366f1,#a855f7);top:-300px;left:-300px;animation-duration:18s;opacity:0.12;filter:blur(120px);"></div>
+  <div class="blob" style="width:600px;height:600px;background:#06b6d4;bottom:-200px;right:-200px;animation-duration:14s;opacity:0.08;"></div>
+
+  <div style="position:relative;z-index:1;max-width:680px;width:100%;padding:24px;text-align:center;">
+    <div class="anim-scale" style="margin-bottom:32px;">
+      <div class="kalyo-k" style="width:100px;height:100px;font-size:52px;margin:0 auto;"></div>
+    </div>
+    <h1 class="grad-text anim-up delay-1" style="font-size:clamp(36px,7vw,80px);font-weight:900;letter-spacing:-0.04em;line-height:1;margin-bottom:16px;">
+      Kalyo
+    </h1>
+    <p class="anim-up delay-2" style="font-size:18px;color:rgba(255,255,255,0.6);margin-bottom:8px;font-weight:400;">
+      منصة مغربية لإدارة المشاريع والتدفقات المالية
+    </p>
+    <p class="anim-up delay-3" style="font-size:14px;color:rgba(255,255,255,0.3);margin-bottom:40px;">
+      React 19 · PHP 8.2 · MySQL · TailwindCSS v4 · JWT
+    </p>
+
+    <div class="anim-up delay-4" style="display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;">
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:999px;padding:10px 20px;">
+        <span style="font-size:16px;">🛡️</span>
+        <code style="font-size:13px;color:#818cf8;">/login/admin</code>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);border-radius:999px;padding:10px 20px;">
+        <span style="font-size:16px;">👤</span>
+        <code style="font-size:13px;color:#22d3ee;">/login/client</code>
+      </div>
+    </div>
+
+    <p class="anim-fade delay-5" style="font-size:13px;color:rgba(255,255,255,0.2);letter-spacing:0.06em;">
+      🇲🇦 Projet de Fin d'Études — PFE 2026
+    </p>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════╗
+     ║  JAVASCRIPT ENGINE          ║
+     ╚══════════════════════════════╝ -->
+<script>
+  // ─── CONFIGURATION ───────────────────────────────
+  const totalScenes = 10;
+  const SCENE_DURATION = 4500; // ms per scene (auto-advance)
+
+  let currentScene = 0;
+  let autoTimer = null;
+  let isAutoPlaying = true;
+
+  // ─── DOM REFS ─────────────────────────────────────
+  const progressBar = document.getElementById('progress-bar');
+  const sceneCounter = document.getElementById('scene-counter');
+
+  // ─── DOTS ─────────────────────────────────────────
+  for (let i = 0; i < totalScenes; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goToScene(i);
+    sceneCounter.appendChild(dot);
+  }
+
+  // ─── GO TO SCENE ──────────────────────────────────
+  function goToScene(n) {
+    if (n < 0 || n >= totalScenes) return;
+
+    // Deactivate current
+    document.getElementById(`scene-${currentScene}`).classList.remove('active');
+    document.querySelectorAll('.dot')[currentScene].classList.remove('active');
+
+    currentScene = n;
+
+    // Activate new
+    const sceneEl = document.getElementById(`scene-${currentScene}`);
+    sceneEl.classList.add('active');
+    document.querySelectorAll('.dot')[currentScene].classList.add('active');
+
+    // Reset animations (re-trigger)
+    sceneEl.querySelectorAll('[class*="anim-"]').forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight; // reflow
+      el.style.animation = '';
+    });
+
+    // Progress bar
+    const pct = ((currentScene + 1) / totalScenes) * 100;
+    progressBar.style.width = pct + '%';
+
+    // Special: counter animation on scene 6
+    if (currentScene === 6) animateCounters();
+
+    // Reset timer
+    clearInterval(autoTimer);
+    if (isAutoPlaying && currentScene < totalScenes - 1) {
+      autoTimer = setInterval(() => {
+        if (currentScene < totalScenes - 1) goToScene(currentScene + 1);
+        else clearInterval(autoTimer);
+      }, SCENE_DURATION);
+    }
+  }
+
+  // ─── COUNTER ANIMATION ────────────────────────────
+  function animateCounters() {
+    const animate = (el, target, suffix = '', duration = 1200) => {
+      if (!el) return;
+      const start = performance.now();
+      const update = (now) => {
+        const t = Math.min((now - start) / duration, 1);
+        const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+        el.textContent = Math.round(ease * target) + suffix;
+        if (t < 1) requestAnimationFrame(update);
+      };
+      requestAnimationFrame(update);
+    };
+    animate(document.getElementById('counter-ca'), 320000, ' DH', 1400);
+    animate(document.getElementById('counter-p'), 4, '', 800);
+    animate(document.getElementById('counter-c'), 3, '', 900);
+    animate(document.getElementById('counter-e'), 40000, ' DH', 1200);
+  }
+
+  // ─── KEYBOARD NAVIGATION ──────────────────────────
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      goToScene(currentScene + 1);
+    }
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      goToScene(currentScene - 1);
+    }
+  });
+
+  // ─── TOUCH SWIPE ──────────────────────────────────
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) goToScene(currentScene + (dx < 0 ? 1 : -1));
+  });
+
+  // ─── PARTICLES ────────────────────────────────────
+  const container = document.getElementById('particles');
+  const colors = ['#6366f1', '#a855f7', '#06b6d4', '#22c55e', '#f59e0b'];
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 4 + 1;
+    p.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${Math.random()*12+8}s;
+      animation-delay:${Math.random()*8}s;
+      opacity:${Math.random()*0.4+0.1};
+    `;
+    container.appendChild(p);
+  }
+
+  // ─── INIT ─────────────────────────────────────────
+  goToScene(0);
+</script>
+
+</body>
+</html>

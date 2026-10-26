@@ -22,7 +22,7 @@
 
 **Solution d'entreprise marocaine conçue pour digitaliser le cycle de vie des projets, la trésorerie en Dirhams (MAD), et unifier la relation client via des espaces dédiés et étanches.**
 
-[Aperçu Démo](#-démonstration-vidéo--aperçu) •
+[Présentation Interactive](#-présentation-interactive-du-projet-kalyo-launch) •
 [Fonctionnalités](#-fonctionnalités-clés) •
 [Architecture](#-architecture-technique) •
 [Installation](#-guide-dinstallation-rapide) •
@@ -43,29 +43,33 @@
 
 ---
 
-## 🎥 Démonstration Vidéo & Aperçu
+## 🎬 Présentation Interactive du Projet (Kalyo Launch)
 
 <div align="center">
 
-<!-- Lecteur Vidéo HTML5 Direct (si supporté par votre visualiseur) -->
-<!--
-<video width="100%" max-width="800px" controls autoplay loop muted style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.12);">
-  <source src="./demo.mp4" type="video/mp4">
-  Votre navigateur ne supporte pas la lecture directe de vidéo HTML5.
-</video>
--->
+<a href="kalyo-launch.html" target="_blank" title="Cliquez pour lancer la présentation interactive Kalyo">
+  <img src="docs/kalyo-launch-banner.svg" alt="Kalyo Interactive Launch Showcase" width="100%" />
+</a>
 
-| Espace Direction (Admin) | Portail Partenaire Client |
-| :---: | :---: |
-| ![Démo Espace Admin](https://placehold.co/600x340/1e293b/indigo?text=Aperçu+Espace+Direction+%28Admin%29) | ![Démo Portail Client](https://placehold.co/600x340/064e3b/emerald?text=Aperçu+Portail+Client) |
+<br />
 
-> 💡 **Intégration Vidéo Directe sur GitHub** :  
-> - **Option 1 (Vidéo Native GitHub)** : Lors de l'édition du `README.md` sur GitHub, glissez-déposez simplement votre fichier vidéo `.mp4` ; GitHub générera un lecteur vidéo intégré interactif.  
-> - **Option 2 (GIF Animé)** : Placez votre fichier `demo.gif` dans le projet pour une lecture automatique fluide sans clic.
-
-[![Regarder la vidéo de démonstration](https://img.shields.io/badge/▶_Voir_la_Démo_Vidéo-Lien_Vidéo-indigo?style=for-the-badge&logo=youtube&logoColor=white)](https://youtube.com)
+[![Lancer la Présentation Interactive](https://img.shields.io/badge/▶_Lancer_la_Présentation_Interactive-kalyo--launch.html-6366f1?style=for-the-badge&logo=html5&logoColor=white)](kalyo-launch.html)
 
 </div>
+
+### 📖 Scénario de la Présentation Interactive :
+
+Cette présentation animée autonome (`kalyo-launch.html`) a été conçue pour introduire la vision du projet, son identité et ses fonctionnalités phares lors de la soutenance :
+
+- **✨ Scène 0 — Identité & Logo 3D Reveal** : Présentation du symbole prismatique en K et de l'identité de marque Kalyo.
+- **🔴 Scène 1 — La Problématique des PME** : Analyse des limites de la gestion manuelle (WhatsApp, tableurs Excel non synchronisés, retards de paiement non tracés).
+- **🟢 Scène 2 — La Solution Kalyo** : Écosystème centralisé unifiant pilotage opérationnel, trésorerie en Dirhams marocains (MAD) et transparence client.
+- **👔 Scène 3 — Espace Direction & Management** : Vue décisionnelle, simulateur de trésorerie en temps réel, calcul automatique de la TVA marocaine (20%) et suivi WBS.
+- **🤝 Scène 4 — Portail Partenaire Client** : Interface dédiée aux entreprises clientes pour valider les jalons, consulter leurs factures certifiées et suivre l'état d'avancement.
+- **🚀 Scène 5 — Déploiement & Perspectives** : Clôture avec accès direct aux environnements de test et synthèse de l'architecture fullstack.
+
+> 💡 **Comment lancer la présentation ?**  
+> Ouvrez simplement le fichier [`kalyo-launch.html`](kalyo-launch.html) dans n'importe quel navigateur Web moderne (Chrome, Edge, Firefox, Safari) ou via l'application Frontend React sur `/kalyo-launch.html`. La navigation se fait à l'aide des flèches du clavier ou des commandes à l'écran.
 
 ---
 
@@ -335,7 +339,7 @@ STAGE PFE/
       <h3 style="margin: 0; font-size: 16px;"><b>Abdelbasste Errifi</b></h3>
       <p style="margin: 4px 0 10px 0; font-size: 12px; color: #10b981; font-weight: bold;">Lead Développeur Full-Stack & Concepteur</p>
       <a href="https://github.com/ERRIFI-X"><img src="https://img.shields.io/badge/GitHub-%40ERRIFI--X-181717?style=flat-square&logo=github" /></a>
-      <a href="mailto:abdoerrifi05@gmail.com"><img src="https://img.shields.io/badge/Email-abdoerrifi05%40gmail.com-EA4335?style=flat-square&logo=gmail&logoColor=white" /></a>
+      <a href="mailto:abdelbasset.errifi@gmail.com"><img src="https://img.shields.io/badge/Email-abdelbasset.errifi%40gmail.com-EA4335?style=flat-square&logo=gmail&logoColor=white" /></a>
     </td>
     <td align="center" width="220" style="padding: 14px; border: none;">
       <a href="https://github.com/2IB2" target="_blank">
